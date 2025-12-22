@@ -1,3 +1,4 @@
+from vec3 import vec3, color
 import sys
 
 wideth = 256
@@ -11,10 +12,12 @@ with open("output.ppm", "w") as f:
         sys.stderr.flush()
 
         for j in range(wideth):
-            r = int((i / (height-1)) * 255)
-            g = int((j / (wideth-1)) * 255)
-            b = 128
-            f.write(f"{r} {g} {b} ")
+
+            pixel_color = color(j / (wideth - 1), i / (height - 1), 0.25)
+            ir = int((pixel_color.x) * 255.999)
+            ig = int((pixel_color.y) * 255.999)
+            ib = int((pixel_color.z) * 255.999)
+            f.write(f"{ir} {ig} {ib} ")
         f.write("\n")
     
     sys.stderr.write("\nDone.\n")
