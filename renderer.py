@@ -1,6 +1,9 @@
 from vec3 import vec3, color, point3
 import sys
 from ray import Ray, ray_color
+from hittable import hittable_list
+from sphere import Sphere
+import random
 
 #image setting
 aspect_ratio = 16.0 / 9.0
@@ -25,6 +28,29 @@ pixel_delta_v = viewport_v / image_height
 viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2
 pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v)
 
+# Create the world and add objects to it
+world = hittable_list()
+
+# Add the main sphere
+world.add(Sphere(point3(0, 0, -1), 0.5))
+
+# Add a ground sphere (very large, slightly below the main sphere)
+world.add(Sphere(point3(0, -100.5, -1), 100))
+
+
+# Add the "Snow/Nebula" spheres
+num_little_spheres = 100
+for _ in range(num_little_spheres):
+    # Random position
+    rand_x = random.uniform(-4.0, 4.0)
+    rand_y = random.uniform(0.2, 3.0)  # Starting above the horizon
+    rand_z = random.uniform(-1.0, -5.0) # Distributed in depth
+    
+    center = point3(rand_x, rand_y, rand_z)
+    radius = random.uniform(0.02, 0.08)
+    
+    world.add(Sphere(center, radius))
+
 with open("output.ppm", "w") as f:
     f.write(f"P3\n{image_width} {image_height}\n255\n")
     for i in range(image_height):
@@ -42,7 +68,7 @@ with open("output.ppm", "w") as f:
             r = Ray(camera_center, ray_direction)
 
 
-            pixel_color = ray_color(r)
+            pixel_color = ray_color(r, world)
             ir = int((pixel_color.x) * 255.999)
             ig = int((pixel_color.y) * 255.999)
             ib = int((pixel_color.z) * 255.999)
