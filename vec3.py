@@ -42,8 +42,8 @@ class vec3:
     def __str__(self):       #for simplicity, maybe shpuld be a write color function??
         return f"{self.x}, {self.y}, {self.z}"
 
-point3 = vec3
-color = vec3
+point3 = vec3    #position = point3(1, 0, 0) one unit to right
+color = vec3     #pixel = color(1, 0, 0) red
 
 def dot(u, v):
     return u.x * v.x + u.y * v.y + u.z * v.z
