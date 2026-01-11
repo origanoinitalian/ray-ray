@@ -5,6 +5,7 @@ from hittable import hittable_list
 from sphere import Sphere
 import random
 import math
+from material import Lambertian, Metal
 
 #image setting
 aspect_ratio = 16.0 / 9.0
@@ -29,21 +30,18 @@ pixel_delta_v = viewport_v / image_height
 viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2
 pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v)
 
+# Materials
+mat_ground = Lambertian(color(0.8, 0.8, 0.0)) # Yellowish matte ground
+mat_center = Metal(color(0.8, 0.8, 0.8), fuzz=0.0) # Shiny Mirror
+mat_left   = Lambertian(color(0.1, 0.2, 0.5)) # Blue matte sphere
+mat_right  = Metal(color(0.8, 0.6, 0.2), fuzz=0.3) # Gold brushed metal
+
 # Create the world and add objects to it
 world = hittable_list()
-
-# The Ground
-world.add(Sphere(point3(0, -100.5, -1), 100))
-
-# middle sphere
-world.add(Sphere(point3(0, 0, -1), 0.5))
-
-# Left Sphere (Smaller and further back)
-world.add(Sphere(point3(-1.0, 0, -1.5), 0.5))
-
-# Right "Tower" (A tall skinny sphere)
-world.add(Sphere(point3(1.0, 0.2, -1.2), 0.3))
-
+world.add(Sphere(point3(0, -100.5, -1), 100, mat_ground))
+world.add(Sphere(point3(0, 0, -1), 0.5, mat_center))
+world.add(Sphere(point3(-1.0, 0, -1.0), 0.5, mat_left))
+world.add(Sphere(point3(1.0, 0, -1.0), 0.5, mat_right))
 
 # Settings for quality
 samples_per_pixel = 20 # Higher = smoother but slower

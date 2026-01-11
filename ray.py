@@ -25,10 +25,13 @@ def ray_color(r, world, depth):
     rec = hit_record()
 
     if world.hit(r, 0.001, float('inf'), rec):
-        # Bounce the ray in a random direction for matte look
-        target =  rec.normal + random_unit_vector()
-        # Simple normal-based coloring
-        return 0.5 * ray_color(Ray(rec.p, target), world, depth - 1)
+
+        # Ask the material to scatter the ray
+        was_scattered, scattered_ray, attenuation = rec.material.scatter(r, rec)
+        if was_scattered:
+            # The color is (Material Color) * (Light from the next bounce)
+            return attenuation * ray_color(scattered_ray, world, depth - 1)
+        return color(0, 0, 0)
     
     # if no hits, return sky gradient
     unit_direction = unit_vector(r.direction_vec)

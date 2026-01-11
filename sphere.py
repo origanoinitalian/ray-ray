@@ -3,9 +3,10 @@ from vec3 import dot
 from hittable import hit_record
 
 class Sphere:
-    def __init__(self, center, radius):
+    def __init__(self, center, radius, material):
         self.center = center
         self.radius = radius
+        self.material = material
 
     def hit(self, r, t_min, t_max, rec):
         oc = r.orig - self.center
@@ -27,6 +28,7 @@ class Sphere:
 
         rec.t = root
         rec.p = r.at(rec.t)
+        rec.material = self.material
         outward_normal = (rec.p - self.center) / self.radius
         rec.set_face_normal(r, outward_normal)
         return True

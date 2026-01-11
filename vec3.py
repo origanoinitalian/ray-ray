@@ -74,4 +74,7 @@ def random_unit_vector():
         p = vec3(random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1))
         if p.length_squared() < 1:
             return unit_vector(p)
+        
+def reflect(v, n):
+    return v - 2 * dot(v, n) * n
     

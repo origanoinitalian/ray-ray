@@ -6,6 +6,7 @@ class hit_record:
         self.normal = None  # Normal vector at intersection
         self.t = 0          # Distance along ray
         self.front_face = False
+        self.material = None  
 
     def set_face_normal(self, r, outward_normal):
         # Decide if the ray is hitting the inside or outside
@@ -33,5 +34,6 @@ class hittable_list:
                 rec.p = temp_rec.p
                 rec.normal = temp_rec.normal
                 rec.front_face = temp_rec.front_face
+                rec.material = temp_rec.material
         
         return hit_anything
