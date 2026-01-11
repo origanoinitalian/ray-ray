@@ -6,4 +6,5 @@ venv/
 .idea/
 .vscode/
 .DS_Store
-output.png
+output.ppm
+output/
