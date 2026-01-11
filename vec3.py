@@ -1,4 +1,5 @@
 import math
+import random
 
 class vec3:
     def __init__(self, e0=0, e1=0, e2=0):
@@ -60,4 +61,10 @@ def unit_vector(v):   #normalize
     if len == 0:
         return vec3(0.0, 0.0, 0.0)
     return v / len
+
+def random_in_unit_sphere():
+    while True:
+        p = vec3(random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1))
+        if p.length_squared() < 1:
+            return p
     

@@ -4,6 +4,7 @@ from ray import Ray, ray_color
 from hittable import hittable_list
 from sphere import Sphere
 import random
+import math
 
 #image setting
 aspect_ratio = 16.0 / 9.0
@@ -38,18 +39,23 @@ world.add(Sphere(point3(0, 0, -1), 0.5))
 world.add(Sphere(point3(0, -100.5, -1), 100))
 
 
-# Add the "Snow/Nebula" spheres
-num_little_spheres = 100
-for _ in range(num_little_spheres):
-    # Random position
-    rand_x = random.uniform(-4.0, 4.0)
-    rand_y = random.uniform(0.2, 3.0)  # Starting above the horizon
-    rand_z = random.uniform(-1.0, -5.0) # Distributed in depth
+# Settings for quality
+samples_per_pixel = 20 # Higher = smoother but slower
+max_depth = 10         # How many times a ray can bounce
+
+def write_color(file, pixel_color, samples):
+    scale = 1.0 / samples
     
-    center = point3(rand_x, rand_y, rand_z)
-    radius = random.uniform(0.02, 0.08)
+    # Divide by samples and apply Gamma 2 (square root)
+    r = math.sqrt(pixel_color.x * scale)
+    g = math.sqrt(pixel_color.y * scale)
+    b = math.sqrt(pixel_color.z * scale)
+
+    ir = int(256 * max(0, min(0.999, r)))
+    ig = int(256 * max(0, min(0.999, g)))
+    ib = int(256 * max(0, min(0.999, b)))
     
-    world.add(Sphere(center, radius))
+    file.write(f"{ir} {ig} {ib} ")
 
 with open("output.ppm", "w") as f:
     f.write(f"P3\n{image_width} {image_height}\n255\n")
@@ -59,20 +65,24 @@ with open("output.ppm", "w") as f:
         sys.stderr.flush()
 
         for j in range(image_width):
+            pixel_color = color(0, 0, 0)
+            for s in range(samples_per_pixel):
+                # Random offset within the pixel [-0.5, 0.5]
+                px = -0.5 + random.random()
+                py = -0.5 + random.random()
 
-            #3D center of curerent pixel
-            pixel_center = pixel00_loc + j * pixel_delta_u + i * pixel_delta_v
+                # Calculate the exact 3D point in the scene for this sample
+                pixel_sample = pixel00_loc + ((j + px) * pixel_delta_u) + ((i + py) * pixel_delta_v)
 
-            #ray direction from camera to pixel center
-            ray_direction = pixel_center - camera_center
-            r = Ray(camera_center, ray_direction)
+                ray_direction = pixel_sample - camera_center
+                r = Ray(camera_center, ray_direction)
 
+                # Accumulate the color from all these rays
+                pixel_color += ray_color(r, world, max_depth)
 
-            pixel_color = ray_color(r, world)
-            ir = int((pixel_color.x) * 255.999)
-            ig = int((pixel_color.y) * 255.999)
-            ib = int((pixel_color.z) * 255.999)
-            f.write(f"{ir} {ig} {ib} ")
+            # Average the color and write it
+            write_color(f, pixel_color, samples_per_pixel)
+
         f.write("\n")
     
     sys.stderr.write("\nDone.\n")
