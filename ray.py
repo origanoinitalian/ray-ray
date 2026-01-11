@@ -1,4 +1,4 @@
-from vec3 import random_in_unit_sphere, vec3, point3, color, unit_vector, dot
+from vec3 import random_in_unit_sphere, random_unit_vector, vec3, point3, color, unit_vector, dot
 from hittable import hit_record
 
 class Ray:
@@ -25,10 +25,10 @@ def ray_color(r, world, depth):
     rec = hit_record()
 
     if world.hit(r, 0.001, float('inf'), rec):
-        # Bounce the ray in a random direction
-        target = rec.p + rec.normal + random_in_unit_sphere()
+        # Bounce the ray in a random direction for matte look
+        target =  rec.normal + random_unit_vector()
         # Simple normal-based coloring
-        return 0.5 * ray_color(Ray(rec.p, target - rec.p), world, depth - 1)
+        return 0.5 * ray_color(Ray(rec.p, target), world, depth - 1)
     
     # if no hits, return sky gradient
     unit_direction = unit_vector(r.direction_vec)

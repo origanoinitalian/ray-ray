@@ -32,11 +32,17 @@ pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v)
 # Create the world and add objects to it
 world = hittable_list()
 
-# Add the main sphere
+# The Ground
+world.add(Sphere(point3(0, -100.5, -1), 100))
+
+# middle sphere
 world.add(Sphere(point3(0, 0, -1), 0.5))
 
-# Add a ground sphere (very large, slightly below the main sphere)
-world.add(Sphere(point3(0, -100.5, -1), 100))
+# Left Sphere (Smaller and further back)
+world.add(Sphere(point3(-1.0, 0, -1.5), 0.5))
+
+# Right "Tower" (A tall skinny sphere)
+world.add(Sphere(point3(1.0, 0.2, -1.2), 0.3))
 
 
 # Settings for quality

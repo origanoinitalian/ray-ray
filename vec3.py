@@ -67,4 +67,11 @@ def random_in_unit_sphere():
         p = vec3(random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1))
         if p.length_squared() < 1:
             return p
+        
+def random_unit_vector():
+    while True:
+        # Pick a random point in a unit cube
+        p = vec3(random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1))
+        if p.length_squared() < 1:
+            return unit_vector(p)
     
