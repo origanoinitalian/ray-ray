@@ -5,6 +5,9 @@ class Material:
     def scatter(self, r_in, rec):
         # Returns (bool, scattered_ray, attenuation_color)
         return False, None, None
+    
+    def emitted(self, u, v, p):
+        return color(0, 0, 0)
 
 class Lambertian(Material):
     def __init__(self, albedo):
@@ -32,3 +35,18 @@ class Metal(Material):
         # Only reflect if the ray is moving 'out' from the surface
         success = dot(scattered.direction_vec, rec.normal) > 0
         return success, scattered, self.albedo
+    
+    
+    
+class DiffuseLight(Material):
+    def __init__(self, albedo):
+        # albedo can be a color or a texture
+        self.albedo = albedo
+
+    def scatter(self, r_in, rec):
+        # Lights do not reflect/scatter rays
+        return False, None, None
+
+    def emitted(self, u, v, p):
+        # This returns the actual light color
+        return self.albedo
