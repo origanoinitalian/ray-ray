@@ -43,8 +43,8 @@ class vec3:
     def __str__(self):       #for simplicity, maybe shpuld be a write color function??
         return f"{self.x}, {self.y}, {self.z}"
 
-point3 = vec3    #position = point3(1, 0, 0) one unit to right
-color = vec3     #pixel = color(1, 0, 0) red
+point3 = vec3    # position = point3(1, 0, 0) one unit to right
+color = vec3     # pixel = color(1, 0, 0) red
 
 def dot(u, v):
     return u.x * v.x + u.y * v.y + u.z * v.z
@@ -56,13 +56,13 @@ def cross(u, v):
         u.x * v.y - u.y * v.x
     )
 
-def unit_vector(v):   #normalize
+def unit_vector(v):   # normalize
     len = v.length()
     if len == 0:
         return vec3(0.0, 0.0, 0.0)
     return v / len
 
-def random_in_unit_sphere():
+def random_in_unit_sphere(): # for lambertian scattering in many random directions
     while True:
         p = vec3(random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1))
         if p.length_squared() < 1:
