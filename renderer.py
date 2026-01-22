@@ -119,8 +119,9 @@ def write_color(pixel_color, samples):
     
     return f"{ir} {ig} {ib} "
 
-def render_row():
-    for i in range(image_height):
+def render_row(i):
+    row_output = ""
+    for j in range(image_width):
         pixel_color = color(0, 0, 0)
         for s in range(samples_per_pixel):
             px = -0.5 + random.random()
