@@ -8,28 +8,23 @@ class Ray:
         self.direction_vec = direction
 
     def at(self, t):
-        return self.orig + (self.direction_vec * t) # P(t) = A + t*b
+        return self.orig + (self.direction_vec * t) # P(t) = O + t*d
     
 
-def ray_color(r, world, depth):
+def ray_color(r, world, depth): # the eye with rules of interval
     if depth <= 0:
-        return color(0,0,0) # Stop if we've bounced too many times
+        return color(0,0,0) # Stop ray from bouncing forever
 
     rec = hit_record()
 
-    if not world.hit(r, interval(0.001, float('inf')), rec):
+    if not world.hit(r, interval(0.001, float('inf')), rec): # check the ray hit an object  
         return color(0, 0, 0)
     
-    # Get light emitted by the material
     color_from_emission = rec.material.emitted(rec.u, rec.v, rec.p)
 
-    # Check if the material scatters light (like Metal or Lambertian)
     was_scattered, scattered_ray, attenuation = rec.material.scatter(r, rec)
-
-    # Ask the material to scatter the ray
     
     if was_scattered:
-        # Standard recursive bounce
         return color_from_emission + attenuation * ray_color(scattered_ray, world, depth - 1)
     else:
         return color_from_emission

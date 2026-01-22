@@ -30,13 +30,14 @@ class hittable_list:
     def hit(self, r, ray_t, rec):
         temp_rec = hit_record()
         hit_anything = False
-        closest_so_far = ray_t.max
+        closest_so_far = ray_t.max # start ar infinity
 
         for obj in self.objects:
+            # are you closest than the closest so far?!  !!handle occlusion
             if obj.hit(r, interval(ray_t.min, closest_so_far), temp_rec):
                 hit_anything = True
                 closest_so_far = temp_rec.t
-                # Copy the temp_rec values to our main record
+                # Copy the temp_rec values to the main record
                 rec.t = temp_rec.t
                 rec.p = temp_rec.p
                 rec.u = temp_rec.u

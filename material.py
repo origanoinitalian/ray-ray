@@ -3,7 +3,7 @@ from ray import Ray
 
 class Material:
     def scatter(self, r_in, rec):
-        # Returns (bool, scattered_ray, attenuation_color)
+        # bool, scattered_ray, attenuation_color
         return False, None, None
     
     def emitted(self, u, v, p):
@@ -16,7 +16,7 @@ class Lambertian(Material):
     def scatter(self, r_in, rec):
         scatter_direction = rec.normal + random_unit_vector()
         
-        # Catch degenerate scatter direction (if normal and random vector cancel out)
+        # to keep the ray moving(not deviding by 0 or nything)
         if scatter_direction.length_squared() < 1e-16:
             scatter_direction = rec.normal
             
@@ -44,9 +44,7 @@ class DiffuseLight(Material):
         self.albedo = albedo
 
     def scatter(self, r_in, rec):
-        # Lights do not reflect/scatter rays
         return False, None, None
 
     def emitted(self, u, v, p):
-        # This returns the actual light color
         return self.albedo

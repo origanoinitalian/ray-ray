@@ -47,7 +47,6 @@ class Quad(hittable):
         return True
 
     def is_interior(self, a, b, rec):
-        # Check if alpha and beta are between 0 and 1
         if (a < 0) or (1 < a) or (b < 0) or (1 < b):
             return False
         
