@@ -16,7 +16,7 @@ class hit_record:
         self.material = None  
 
     def set_face_normal(self, r, outward_normal):
-        # Decide if the ray is hitting the inside or outside
+        # if the ray is hitting the inside or outside
         self.front_face = dot(r.direction_vec, outward_normal) < 0
         self.normal = outward_normal if self.front_face else -outward_normal
 
@@ -37,7 +37,6 @@ class hittable_list:
             if obj.hit(r, interval(ray_t.min, closest_so_far), temp_rec):
                 hit_anything = True
                 closest_so_far = temp_rec.t
-                # Copy the temp_rec values to the main record
                 rec.t = temp_rec.t
                 rec.p = temp_rec.p
                 rec.u = temp_rec.u

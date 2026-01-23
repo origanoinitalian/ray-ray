@@ -30,10 +30,8 @@ class Metal(Material):
 
     def scatter(self, r_in, rec):
         reflected = reflect(unit_vector(r_in.direction_vec), rec.normal)
-        # Add fuzziness to the reflection
-        scattered = Ray(rec.p, reflected + self.fuzz * random_unit_vector())
-        # Only reflect if the ray is moving 'out' from the surface
-        success = dot(scattered.direction_vec, rec.normal) > 0
+        scattered = Ray(rec.p, reflected + self.fuzz * random_unit_vector()) # Add fuzz to the reflection
+        success = dot(scattered.direction_vec, rec.normal) > 0 # reflect if the ray is moving out from the surface
         return success, scattered, self.albedo
     
     

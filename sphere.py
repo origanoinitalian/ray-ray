@@ -27,8 +27,7 @@ class Sphere:
             return False
         
         sqrtd = math.sqrt(discriminant)
-        # Find the nearest root in the acceptable range
-        root = (-h - sqrtd) / a
+        root = (-h - sqrtd) / a  # the nearest root in the range
         if not ray_t.surrounds(root):
             root = (-h + sqrtd) / a
             if not ray_t.surrounds(root):
