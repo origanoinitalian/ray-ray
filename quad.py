@@ -9,8 +9,7 @@ class Quad(hittable):
         self.u = u   # Vector for side 1
         self.v = v   # Vector for side 2
         self.mat = mat
-        
-        # Calculate the plane parameters
+
         n = cross(u, v)
         self.normal = unit_vector(n)
         self.D = dot(self.normal, Q) # The 'D' in Ax + By + Cz = D
@@ -19,27 +18,24 @@ class Quad(hittable):
     def hit(self, r, ray_t, rec):
         denom = dot(self.normal, r.direction_vec)
 
-        # No hit if the ray is parallel to the plane
-        if abs(denom) < 1e-8:
+        if abs(denom) < 1e-8: # No hit if the ray is parallel to the plane
             return False
 
-        # Solve for t (intersection point on the infinite plane)
         t = (self.D - dot(self.normal, r.orig)) / denom
         if not ray_t.contains(t):
             return False
 
-        # Determine if the hit point is inside the quad boundaries
         intersection = r.at(t)
         planar_hitpt_vector = intersection - self.Q
         
-        # Calculate alpha and beta (u,v coordinates on the quad surface)
+        # u,v coordinates on the quad surface
         alpha = dot(self.w, cross(planar_hitpt_vector, self.v))
         beta = dot(self.w, cross(self.u, planar_hitpt_vector))
 
         if not self.is_interior(alpha, beta, rec):
             return False
 
-        # Ray hits the quad; fill the record
+        #Ray hits the quad;fill the record
         rec.t = t
         rec.p = intersection
         rec.material = self.mat
